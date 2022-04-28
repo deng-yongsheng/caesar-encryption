@@ -119,18 +119,12 @@ void decrypt_text(unsigned char *src, unsigned char *dst, int key)
 }
 
 /**
- * @brief 针对二进制的凯撒加密算法
  * @brief 判断文件权限
  *
- * @param src 源数据
- * @param dst 目标数据
- * @param count 数据长度
- * @param key 密钥
  * @param src_filename 源文件，需要存在且具有读权限
  * @param dst_filename 目标文件，不存在或具有写权限
  * @return int
  */
-void encrypt(unsigned char *src, unsigned char *dst, int count, int key)
 int verify_permissions(const char *src_filename, const char *dst_filename)
 {
     if (access(src_filename, Exist_OK) != 0)
@@ -156,9 +150,79 @@ int verify_permissions(const char *src_filename, const char *dst_filename)
     return 0;
 }
 
+/**
+ * @brief 对文件进行凯撒加密
+ *
+ * @param src_filename 源文件名，需要存在且具有读权限
+ * @param dst_filename 目标文件名，不存在或具有写权限
+ * @param key 口令
+ */
+void encrypt_file(const char *src_filename, const char *dst_filename, int key)
 {
     key = key % 256;
-    for (int i = 0; i < count; i++)
+    if (verify_permissions(src_filename, dst_filename) == 0)
     {
+        // 打开源文件
+        FILE *src_file = fopen(src_filename, "r");
+        // 读取并对文件进行加密
+        // 获取文件尺寸
+        fseek(src_file, 0, SEEK_END);
+        int src_file_size = ftell(src_file);
+        // 开辟内存
+        unsigned char *text = (unsigned char *)malloc(src_file_size + 1);
+        rewind(src_file);
+        fread(text, sizeof(unsigned char), src_file_size, src_file);
+        // 关闭源文件
+        fclose(src_file);
+        // 加密
+        for (int i = 0; i < src_file_size; i++)
+        {
+            text[i] = (text[i] + key) % 256;
+        }
+        // 输出到源文件
+        FILE *dst_file = fopen(dst_filename, "w");
+        fwrite(text, sizeof(unsigned char), src_file_size, dst_file);
+        free(text);
+        // 关闭目标文件
+        fclose(dst_file);
+        printf("加密完成！");
+    }
+}
+/**
+ * @brief 对文件进行凯撒加密解密
+ *
+ * @param src_filename 源文件名，需要存在且具有读权限
+ * @param dst_filename 目标文件名，不存在或具有写权限
+ * @param key 口令
+ */
+void decrypt_file(const char *src_filename, const char *dst_filename, int key)
+{
+    key = key % 256;
+    if (verify_permissions(src_filename, dst_filename) == 0)
+    {
+        // 打开源文件
+        FILE *src_file = fopen(src_filename, "r");
+        // 读取并对文件进行加密
+        // 获取文件尺寸
+        fseek(src_file, 0, SEEK_END);
+        int src_file_size = ftell(src_file);
+        // 开辟内存
+        unsigned char *text = (unsigned char *)malloc(src_file_size + 1);
+        rewind(src_file);
+        fread(text, sizeof(unsigned char), src_file_size, src_file);
+        // 关闭源文件
+        fclose(src_file);
+        // 解密
+        for (int i = 0; i < src_file_size; i++)
+        {
+            text[i] = (text[i] - key) % 256;
+        }
+        // 输出到源文件
+        FILE *dst_file = fopen(dst_filename, "w");
+        fwrite(text, sizeof(unsigned char), src_file_size, dst_file);
+        free(text);
+        // 关闭目标文件
+        fclose(dst_file);
+        printf("解密完成！");
     }
 }
