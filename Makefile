@@ -2,7 +2,11 @@ CC = gcc
 
 .PHONY : clean run
 
-main.exe : main.c caesar.c
+CFILES = \
+	main.c \
+	caesar.c
+
+main.exe : $(CFILES)
 	$(CC) $^ -o $@ -fexec-charset=gbk
 
 run : main.exe
