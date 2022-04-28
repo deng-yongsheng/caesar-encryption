@@ -27,7 +27,7 @@ make PLATFORM=linux
 
 + 对指定文件进行加密
   
-  输出文件到caesar
+  对 `[filename]`加密 ，输出文件到 `[filename].caesar`
 
 ```shell
 ./caesar [filename]
@@ -35,7 +35,7 @@ make PLATFORM=linux
 
 + 对文件进行加密
   
-  文件后缀名为 caesar.
+  对后缀名为`[filename].caesar`的文件进行解密，输出文件到`[filename]`
 
 ```shell
 ./caesar [filename].caesar
