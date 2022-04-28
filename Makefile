@@ -1,16 +1,36 @@
 CC = gcc
 
-.PHONY : clean run
+PRJ = caesar
+# 目标平台
+# windows or linux
+PLATFORM = windows
 
 CFILES = \
 	main.c \
 	caesar.c
 
-main.exe : $(CFILES)
+.PHONY : clean run
+
+ifeq ($(PLATFORM), windows)
+
+$(PRJ) : $(CFILES)
 	$(CC) $^ -o $@ -fexec-charset=gbk
 
-run : main.exe
-	./main.exe
+run : $(PRJ).exe
+	./$(PRJ).exe
 
-clean: 
-	rm *.exe
+clean : 
+	del /Q *.exe
+
+else
+
+$(PRJ) : $(CFILES)
+	$(CC) $^ -o $@
+
+run : $(PRJ)
+	./$(PRJ)
+
+clean:
+	rm /f *.exe
+
+endif
