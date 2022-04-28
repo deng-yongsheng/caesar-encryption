@@ -8,6 +8,5 @@ main.exe : main.c caesar.c
 run : main.exe
 	./main.exe
 
-clean:
-	rm *.o
+clean: 
 	rm *.exe

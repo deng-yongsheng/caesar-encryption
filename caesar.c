@@ -1,4 +1,7 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include <conio.h>
+#include <io.h>
 #include "caesar.h"
 
 /**
@@ -6,6 +9,7 @@
  *
  */
 unsigned char character_set[] = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
+
 /**
  * @brief 自定义字符集的长度
  *
@@ -31,23 +35,25 @@ int get_char_code(unsigned char ch)
 }
 
 /**
- * @brief 获取用户输入的凯撒密码，最大长度为 MAX_PASSOWRD_LEN
+ * @brief 从控制台获取用户输入的凯撒密码，最大值为 MAX_PASSOWRD_LEN
  *
  * @return int
  */
 int get_password()
 {
-    unsigned char *passwd = (unsigned char *)malloc(sizeof(unsigned char) * MAX_PASSOWRD_LEN);
-    int i, int_passwd = 0;
+    char passwd[MAX_PASSOWRD_LEN + 1];
+    int int_passwd = 0;
     while (int_passwd == 0)
     {
         printf("请输入密码：");
-        for (i = 0; i < MAX_PASSOWRD_LEN; i++)
+        for (int i = 0; i < MAX_PASSOWRD_LEN; i++)
         {
             passwd[i] = getch();
             if (passwd[i] == '\n' || passwd[i] == '\r')
             {
                 printf("\r\n");
+                // 末尾添加结束符
+                passwd[i + 1] = '\0';
                 break;
             }
             else
@@ -55,11 +61,10 @@ int get_password()
                 printf("*");
             }
         };
-        passwd[i] = '\0';
         int_passwd = atoi(passwd);
         if (int_passwd == 0)
         {
-            printf("输入的密码无效\n");
+            fprintf(stderr, "输入的密码无效\n");
         }
     }
 
@@ -71,9 +76,9 @@ int get_password()
  *
  * @param src 源字符串
  * @param dst 目标保存位置
- * @param key 密钥，最大值为 CHARSET_LENGTH-1
+ * @param key 口令，最大值为 CHARSET_LENGTH-1
  */
-void encrypt_text(unsigned char *src, unsigned char *dst, int key)
+void encrypt_text(const char *src, char *dst, int key)
 {
     int i;
     key = key % CHARSET_LENGTH;
@@ -97,9 +102,9 @@ void encrypt_text(unsigned char *src, unsigned char *dst, int key)
  *
  * @param src 密码字符串
  * @param dst 目标保存位置
- * @param key 密钥，最大值为 CHARSET_LENGTH-1
+ * @param key 口令，最大值为 CHARSET_LENGTH-1
  */
-void decrypt_text(unsigned char *src, unsigned char *dst, int key)
+void decrypt_text(const char *src, char *dst, int key)
 {
     int i;
     key = key % CHARSET_LENGTH;
@@ -112,7 +117,7 @@ void decrypt_text(unsigned char *src, unsigned char *dst, int key)
         }
         else
         {
-            src[i] = dst[i];
+            dst[i] = src[i];
         }
     }
     dst[i] = '\0';
