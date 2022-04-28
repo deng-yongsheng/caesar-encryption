@@ -17,7 +17,7 @@ make PLATFORM=windows
 make PLATFORM=linux
 ```
 
-## 使用
+### 使用
 
 + 交互式加密解密
 
