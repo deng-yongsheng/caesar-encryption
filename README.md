@@ -20,6 +20,8 @@ make PLATFORM=linux
 ### 使用
 
 + 交互式加密解密
+  
+  **在使用过程中按 Ctrl+C 退出程序**
 
 ```shell
 ./caesar
