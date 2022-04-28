@@ -1,33 +1,41 @@
 # 凯撒加密-C语言实现
 
 ### 依赖
+
 + gcc
 + cmake
 
-### 编译
+### windows 平台下编译
 
-+ windows
 ```shell
-make
+make PLATFORM=windows
 ```
-+ Linux
+
+### Linux 平台编译
+
 ```shell
 make PLATFORM=linux
 ```
 
-### 交互式加密
+## 使用
+
++ 交互式加密解密
 
 ```shell
 ./caesar
 ```
 
-### 对文件进行加密
++ 对指定文件进行加密
+  
+  输出文件到caesar
 
 ```shell
 ./caesar [filename]
 ```
 
-### 对文件进行加密
++ 对文件进行加密
+  
+  文件后缀名为 caesar.
 
 ```shell
 ./caesar [filename].caesar
