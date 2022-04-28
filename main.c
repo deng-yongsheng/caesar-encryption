@@ -2,6 +2,7 @@
 #include <string.h>
 #include <io.h>
 #include <stdlib.h>
+#include <conio.h>
 #include "caesar.h"
 
 int main(int argc, char const *argv[])
@@ -67,17 +68,45 @@ int main(int argc, char const *argv[])
     }
     else
     {
-        // 从控制台获取
-        printf("请输入要加密的明文：");
-        scanf("%s", string);
-        printf("\n");
-
-        key = get_password();
-        encrypt_text(string, encrypt_str, key);
-        printf("密文：%s\n\n", encrypt_str);
-
-        decrypt_text(encrypt_str, string, key);
-        printf("再解密后的明文：%s\n\n", string);
+        while (1)
+        {
+            char action = ' ';
+            while (1)
+            {
+                if (action == 'e' || action == 'd')
+                {
+                    break;
+                }
+                else if (action == '\3')
+                {
+                    printf("\nCtrl+C 程序结束\n");
+                    exit(0);
+                }
+                printf("按e进行加密，d进行解密：", action, action);
+                action = getch();
+                printf("\r\n");
+            }
+            if (action == 'e')
+            {
+                // 从控制台获取明文
+                printf("请输入要加密的明文：");
+                scanf("%s", string);
+                printf("\n");
+                key = get_password();
+                encrypt_text(string, encrypt_str, key);
+                printf("密文：%s\n\n", encrypt_str);
+            }
+            else if (action == 'd')
+            {
+                // 从控制台获取密文
+                printf("请输入要解密的密文：");
+                scanf("%s", string);
+                printf("\n");
+                key = get_password();
+                decrypt_text(string, encrypt_str, key);
+                printf("明文：%s\n\n", encrypt_str);
+            }
+        }
     }
     return 0;
 }
