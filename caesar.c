@@ -120,13 +120,42 @@ void decrypt_text(unsigned char *src, unsigned char *dst, int key)
 
 /**
  * @brief 针对二进制的凯撒加密算法
+ * @brief 判断文件权限
  *
  * @param src 源数据
  * @param dst 目标数据
  * @param count 数据长度
  * @param key 密钥
+ * @param src_filename 源文件，需要存在且具有读权限
+ * @param dst_filename 目标文件，不存在或具有写权限
+ * @return int
  */
 void encrypt(unsigned char *src, unsigned char *dst, int count, int key)
+int verify_permissions(const char *src_filename, const char *dst_filename)
+{
+    if (access(src_filename, Exist_OK) != 0)
+    {
+        fprintf(stderr, "\"%s\"文件不存在\n", src_filename);
+        return -1;
+    }
+    if (access(src_filename, Read_OK) != 0)
+    {
+        fprintf(stderr, "没有对\"%s\"文件的读取权限\n", src_filename);
+        return -1;
+    }
+    // 判断文件是否存在
+    if (access(dst_filename, Exist_OK) == 0)
+    {
+        fprintf(stderr, "\"%s\"文件存在，将进行覆盖\n", dst_filename);
+        if (access(dst_filename, Write_OK) != 0)
+        {
+            fprintf(stderr, "没有对\"%s\"文件的写入权限\n", dst_filename);
+            return -1;
+        }
+    }
+    return 0;
+}
+
 {
     key = key % 256;
     for (int i = 0; i < count; i++)
