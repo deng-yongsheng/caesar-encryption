@@ -1,3 +1,6 @@
+#include <conio.h>
+#include "caesar.h"
+
 /**
  * @brief 自定义字符集
  *
@@ -25,6 +28,42 @@ int get_char_code(unsigned char ch)
         }
     }
     return -1;
+}
+
+/**
+ * @brief 获取用户输入的凯撒密码，最大长度为 MAX_PASSOWRD_LEN
+ *
+ * @return int
+ */
+int get_password()
+{
+    unsigned char *passwd = (unsigned char *)malloc(sizeof(unsigned char) * MAX_PASSOWRD_LEN);
+    int i, int_passwd = 0;
+    while (int_passwd == 0)
+    {
+        printf("请输入密码：");
+        for (i = 0; i < MAX_PASSOWRD_LEN; i++)
+        {
+            passwd[i] = getch();
+            if (passwd[i] == '\n' || passwd[i] == '\r')
+            {
+                printf("\r\n");
+                break;
+            }
+            else
+            {
+                printf("*");
+            }
+        };
+        passwd[i] = '\0';
+        int_passwd = atoi(passwd);
+        if (int_passwd == 0)
+        {
+            printf("输入的密码无效\n");
+        }
+    }
+
+    return int_passwd;
 }
 
 /**
