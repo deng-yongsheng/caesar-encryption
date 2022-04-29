@@ -11,13 +11,13 @@
  * @brief 自定义字符集
  *
  */
-unsigned char character_set[] = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
+const unsigned char character_set[] = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
 
 /**
  * @brief 自定义字符集的长度
  *
  */
-int CHARSET_LENGTH = sizeof(character_set) - 1;
+const int CHARSET_LENGTH = sizeof(character_set) - 1;
 
 /**
  * @brief 获取某个字符的内部编码
