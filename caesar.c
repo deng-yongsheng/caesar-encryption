@@ -72,6 +72,31 @@ int get_password()
 }
 
 /**
+ * @brief 获取文件尺寸
+ *
+ * @param filename
+ * @return int
+ */
+int get_file_size(const char *filename)
+{
+    struct stat buf;
+    int fd = open(filename, _O_RDONLY);
+
+    if (stat(filename, &buf) > -1)
+    {
+        close(fd);
+        printf("%s 文件的尺寸为: %d\n", filename, buf.st_size);
+        return buf.st_size;
+    }
+    else
+    {
+        close(fd);
+        fprintf(stderr, "错误：%s\n", strerror(errno));
+        return -1;
+    }
+}
+
+/**
  * @brief 加密普通文本
  *
  * @param src 源字符串
