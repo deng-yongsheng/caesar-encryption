@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <conio.h>
 #include <io.h>
+#include <string.h>
+#include <fcntl.h>
+#include <sys/stat.h>
 #include "caesar.h"
 
 /**
@@ -67,7 +70,6 @@ int get_password()
             fprintf(stderr, "输入的密码无效\n");
         }
     }
-
     return int_passwd;
 }
 
@@ -192,16 +194,15 @@ void encrypt_file(const char *src_filename, const char *dst_filename, int key)
     key = key % 256;
     if (verify_permissions(src_filename, dst_filename) == 0)
     {
-        // 打开源文件
-        FILE *src_file = fopen(src_filename, "r");
         // 读取并对文件进行加密
         // 获取文件尺寸
-        fseek(src_file, 0, SEEK_END);
-        int src_file_size = ftell(src_file);
+        int src_file_size = get_file_size(src_filename);
         // 开辟内存
         unsigned char *text = (unsigned char *)malloc(src_file_size + 1);
-        rewind(src_file);
-        fread(text, sizeof(unsigned char), src_file_size, src_file);
+        int read_num;
+        // 打开源文件
+        FILE *src_file = fopen(src_filename, "rb");
+        read_num = fread(text, sizeof(unsigned char), src_file_size, src_file);
         // 关闭源文件
         fclose(src_file);
         // 加密
@@ -210,12 +211,13 @@ void encrypt_file(const char *src_filename, const char *dst_filename, int key)
             text[i] = (text[i] + key) % 256;
         }
         // 输出到源文件
-        FILE *dst_file = fopen(dst_filename, "w");
+        FILE *dst_file = fopen(dst_filename, "wb");
         fwrite(text, sizeof(unsigned char), src_file_size, dst_file);
-        free(text);
+        fflush(dst_file);
         // 关闭目标文件
         fclose(dst_file);
-        printf("加密完成！");
+        free(text);
+        printf("加密完成！\n");
     }
 }
 /**
@@ -231,14 +233,12 @@ void decrypt_file(const char *src_filename, const char *dst_filename, int key)
     if (verify_permissions(src_filename, dst_filename) == 0)
     {
         // 打开源文件
-        FILE *src_file = fopen(src_filename, "r");
+        FILE *src_file = fopen(src_filename, "rb");
         // 读取并对文件进行加密
         // 获取文件尺寸
-        fseek(src_file, 0, SEEK_END);
-        int src_file_size = ftell(src_file);
+        int src_file_size = get_file_size(src_filename);
         // 开辟内存
         unsigned char *text = (unsigned char *)malloc(src_file_size + 1);
-        rewind(src_file);
         fread(text, sizeof(unsigned char), src_file_size, src_file);
         // 关闭源文件
         fclose(src_file);
@@ -248,7 +248,7 @@ void decrypt_file(const char *src_filename, const char *dst_filename, int key)
             text[i] = (text[i] - key) % 256;
         }
         // 输出到源文件
-        FILE *dst_file = fopen(dst_filename, "w");
+        FILE *dst_file = fopen(dst_filename, "wb");
         fwrite(text, sizeof(unsigned char), src_file_size, dst_file);
         free(text);
         // 关闭目标文件
